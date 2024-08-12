@@ -9,7 +9,10 @@ def web_search(query: str, num_results: int = 5) -> list:
         "q": query,
         "num": num_results
     }
+    print(f"Web Search: searching {query}")
     response = requests.get(url, params=params)
     results = response.json().get("items", [])
-
-    return [{"title": item["title"], "link": item["link"], "snippet": item["snippet"]} for item in results]
+    res = [{"title": item["title"], "link": item["link"], "snippet": item["snippet"]} for item in results]
+    links = [{"link": item["link"]} for item in res]
+    print(f"Web Search Response: {links}")
+    return links
