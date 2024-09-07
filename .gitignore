@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#twitter.db and cookies related
+twitter.db
+cookies.json
+
 # C extensions
 *.so
 
