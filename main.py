@@ -13,13 +13,13 @@ async def main():
     print("Type 'exit' to quit the program.")
 
     while True:
-        user_input = input("\nEnter your query (e.g., 'scrape @username', 'summarize @username', or 'search <query>'): ")
+        user_input = input("\nEnter your query (e.g., 'scrape @username', 'answer query on tweets for @username', or 'web search <query>'): ")
 
         if user_input.lower() == 'exit':
             print("Thank you for using the program. Goodbye!")
             break
 
-        response = gpt_call_with_function(user_input, tweet_storage, user_storage)
+        response = await gpt_call_with_function(user_input, tweet_storage, user_storage)
         print("\nGPT Response:")
         print(response)
 

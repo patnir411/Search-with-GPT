@@ -15,6 +15,7 @@ GET_USER_TWEETS_RESET_TIME = 15 * 60  # 15 minutes in seconds
 
 client = Client('en-US')
 
+is_logged_in = False
 
 async def login_to_twitter():
     try:
@@ -28,12 +29,20 @@ async def login_to_twitter():
             print("(x) loading past cookies...")
             client.load_cookies('cookies.json')
         print("Successfully logged in to Twitter.")
+        is_logged_in = True
     except Exception as e:
         print(f"Failed to log in to Twitter: {e}")
+        is_logged_in = False
 
 
 async def scrape_twitter_user(username, tweet_storage: TweetStorage, user_storage: UserStorage):
     """Scrapes all tweets from a given Twitter user, respecting rate limits."""
+    if is_logged_in:
+        print("is logged in!")
+    else:
+        print("NOT LOGGED IN! LOGGING IN")
+        await login_to_twitter()
+        print("perhaps logged in...")
     try:
         user = await client.get_user_by_screen_name(username)
         print(f"Scraping @{username}...")
