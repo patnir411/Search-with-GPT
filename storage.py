@@ -110,3 +110,34 @@ class TweetStorage(SQLiteStorage):
             print(f"Stored retweet {retweet.id}")
         except sqlite3.Error as e:
             print(f"Error adding retweet: {e}")
+
+    def get_tweets_by_user_id(self, user_id):
+        """Retrieves all tweets and retweets for a specific user by user_id."""
+        try:
+            self.cursor.execute(
+                f"""
+                SELECT tweet_id, user_id, created_at, text, 'tweet' as type
+                FROM {self.tweet_table_name} WHERE user_id = ?
+                UNION ALL
+                SELECT retweet_id as tweet_id, user_id, retweeted_at as created_at, text, 'retweet' as type
+                FROM {self.retweet_table_name} WHERE user_id = ?
+                ORDER BY created_at DESC
+                """,
+                (user_id, user_id)
+            )
+            rows = self.cursor.fetchall()
+
+            # Return a list of dictionaries with an additional 'type' field to distinguish tweets and retweets
+            return [
+                {
+                    "tweet_id": row[0],
+                    "user_id": row[1],
+                    "created_at": row[2],
+                    "text": row[3],
+                    "type": row[4],  # 'tweet' or 'retweet'
+                }
+                for row in rows
+            ]
+        except sqlite3.Error as e:
+            print(f"Error retrieving tweets and retweets: {e}")
+            return []
